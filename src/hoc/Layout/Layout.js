@@ -14,12 +14,17 @@ function Layout(props) {
         state.menu = !state.menu
         setState({...state})
     }
+    const menuCloseHandler = () => {
+        state.menu = false;
+        setState ({...state})
+    }
 
     return (
         <div className={s.Layout}>
 
             <Drawer
                 isOpen={state.menu}
+                onClose={menuCloseHandler}
             />
 
             <MenuToggle
