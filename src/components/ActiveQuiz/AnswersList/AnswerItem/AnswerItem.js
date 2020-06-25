@@ -9,7 +9,8 @@ function AnswerItem(props) {
     }
 
     return (
-        <li className={cls.join(' ')}
+        <li
+            className={cls.join(' ')}
             onClick={() => props.onAnswerClick(props.answer.id)}
         >
             { props.answer.text }

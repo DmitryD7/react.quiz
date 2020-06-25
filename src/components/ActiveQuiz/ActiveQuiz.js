@@ -3,7 +3,6 @@ import s from "./ActiveQuiz.module.css"
 import AnswersList from "./AnswersList/AnswersList";
 
 function ActiveQuiz(props) {
-
     return (
         <div className={s.ActiveQuiz}>
             <p className={s.Question}>

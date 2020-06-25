@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import s from "./Quiz.module.css"
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
+import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
 
 function Quiz() {
 
     let [state, setState] = useState({
+        results: {},
+        isFinished: false,
         activeQuestion: 0,
         answerState: null,
         quiz: [
@@ -20,7 +23,7 @@ function Quiz() {
                 ]
             },
             {
-                question: 'What year was the Minsk founded in??',
+                question: 'What year was the Minsk founded in?',
                 rightAnswerId: 3,
                 id: 2,
                 answers: [
@@ -34,22 +37,28 @@ function Quiz() {
     })
 
     const onAnswerClickHandler = (answerId) => {
-        if (state.answerState){
+        if (state.answerState) {
             const key = Object.keys(state.answerState)[0]
             if (state.answerState[key] === 'success') {
-
+                return
             }
         }
-
         const question = state.quiz[state.activeQuestion]
+        const results = state.results
 
         if (question.rightAnswerId === answerId) {
+            if (!results[question.id]) {
+                results[question.id] = 'success'
+            }
 
             state.answerState = {[answerId]: 'success'}
+            state.results = results
             setState({...state})
 
             const timeout = window.setTimeout(() => {
-                if (isQuizFinished()){
+                if (isQuizFinished()) {
+                    state.isFinished = true;
+                    setState({...state})
                 } else {
                     state.activeQuestion = state.activeQuestion + 1;
                     state.answerState = null;
@@ -58,7 +67,9 @@ function Quiz() {
                 window.clearTimeout(timeout)
             }, 1000)
         } else {
+            results[question.id] = 'error'
             state.answerState = {[answerId]: 'error'}
+            state.results = results
             setState({...state})
         }
     }
@@ -71,14 +82,22 @@ function Quiz() {
         <div className={s.Quiz}>
             <div className={s.QuizWrapper}>
                 <h1>Answer the questions</h1>
-                <ActiveQuiz
-                    answers={state.quiz[state.activeQuestion].answers}
-                    question={state.quiz[state.activeQuestion].question}
-                    onAnswerClick={onAnswerClickHandler}
-                    quizLenth={state.quiz.length}
-                    answerNumber={state.activeQuestion + 1}
-                    state={state.answerState}
-                />
+                {
+                    state.isFinished
+                        ? <FinishedQuiz
+                        results={state.results}
+                        quiz={state.quiz}
+                        />
+                        : <ActiveQuiz
+                            answers={state.quiz[state.activeQuestion].answers}
+                            question={state.quiz[state.activeQuestion].question}
+                            onAnswerClick={onAnswerClickHandler}
+                            quizLenth={state.quiz.length}
+                            answerNumber={state.activeQuestion + 1}
+                            state={state.answerState}
+                        />
+                }
+
             </div>
         </div>
     )
