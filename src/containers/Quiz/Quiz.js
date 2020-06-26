@@ -3,7 +3,7 @@ import s from "./Quiz.module.css"
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
 
-function Quiz() {
+function Quiz(props) {
 
     let [state, setState] = useState({
         results: {},
